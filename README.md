@@ -1,5 +1,10 @@
 # Biomedical Abstract Section Classifier
 
+The experiment notebook currently relies on previously saved checkpoints
+for some sections and does not yet support a complete run from scratch.
+The inference notebook can run independently using the downloadable
+exported model.
+
 This project classifies sentences in biomedical abstracts into five sections: BACKGROUND, OBJECTIVE, METHODS, RESULTS, and CONCLUSIONS, using the PubMed 20k RCT dataset.
 
 I compared majority-class and TF-IDF baselines with PyTorch neural models to establish reference performance and investigate the effects of model architecture, class weighting, sentence position, and fine-tuning.
