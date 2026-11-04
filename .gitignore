@@ -18,3 +18,5 @@ pubmed-rct/
 
 # Operating-system files
 .DS_Store
+
+.pytest_cache/
