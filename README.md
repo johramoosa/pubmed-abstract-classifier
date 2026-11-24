@@ -208,3 +208,65 @@ For the documented Colab setup, the full path is:
 
 Then run `02_abstract_classifier_inference.ipynb`.
 No retraining is required.
+
+## Run the prediction API with Docker
+
+Install and start Docker Desktop. Run the following commands from the repository root.
+
+### 1. Obtain the trained model
+
+Download the exported model using the model-download instructions above.
+Place it at:
+
+```text
+artifacts/abstract_classifier_v1.pt
+```
+
+The model file is kept outside Git and the Docker image.
+
+### 2. Build the image
+
+```bash
+docker build -t abstract-classifier:v1 .
+```
+
+### 3. Start the API
+
+```bash
+docker run --rm \
+  --name abstract-classifier-api \
+  -p 127.0.0.1:8000:8000 \
+  --mount "type=bind,source=$(pwd)/artifacts,target=/app/artifacts,readonly" \
+  -e ABSTRACT_CLASSIFIER_MODEL_PATH=/app/artifacts/abstract_classifier_v1.pt \
+  abstract-classifier:v1
+```
+
+These commands use macOS/Linux shell syntax. Keep the terminal open while using the API.
+
+### 4. Submit a prediction request
+
+Open http://localhost:8000/docs in your browser.
+
+Expand `POST /predict`, select **Try it out**, and submit:
+
+```json
+{
+  "sentences": [
+    "Effective treatments remain limited.",
+    "This study aimed to evaluate an exercise programme.",
+    "Patients were randomly assigned to exercise or usual care.",
+    "The exercise group reported lower fatigue scores.",
+    "The programme may help reduce persistent fatigue."
+  ]
+}
+```
+
+Supply a complete abstract as an ordered list of non-empty sentences.
+The API prepares punctuation and calculates relative sentence positions.
+It does not automatically split a paragraph into sentences.
+
+Check application status at http://localhost:8000/health.
+
+### 5. Stop the API
+
+Press **Control+C** in the terminal running the container.
